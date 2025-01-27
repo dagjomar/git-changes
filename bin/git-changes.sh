@@ -13,11 +13,13 @@
 # Optional inputs:
 # - Directory to limit the search to
 #
-# Example usage:
-#   ./gitdiff.sh abcdef...fedcba
-#   ./gitdiff.sh abcdef
-#   ./gitdiff.sh abcdef fedcba
-#   ./gitdiff.sh abcdef fedcba ./frontend
+# Set up a git alias to run this script:
+#   git config --global alias.changes '!git-changes/bin/git-changes.sh'
+#
+# Then you can simply run:
+#   git changes abcdef fedcba
+#   git changes abcdef
+#   git changes abcdef fedcba ./frontend
 # -------------------------------------------------------------------------
 
 # Validate input arguments

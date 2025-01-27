@@ -45,7 +45,15 @@ chmod +x bin/git-changes.sh
 ```
 
 3. **Set Up Git Alias:**
-   To simplify usage, set up a Git alias to run the script with git changes:
+   The simplest way to do this is to run the `install_alias.sh` script:
+
+```bash
+./bin/install_alias.sh
+```
+
+This will set up a Git alias to run the script with command alias `git changes`.
+
+Alternatively, you can set up the alias manually:
 
 ```bash
 git config --global alias.changes '!bash /path/to/git-changes/bin/git-changes.sh'
