@@ -115,7 +115,6 @@ package.json
 
 ## TODOs
 
-- Add support for selecting commits from the commit history using arrow keys and fuzzy search
 - Implement filtering by file type
 - Add colorized diff output option
 - Create better documentation with real-world use cases
