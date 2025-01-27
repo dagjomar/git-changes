@@ -1,14 +1,23 @@
 # Git Changes
 
-## A lightweight command-line tool for inspecting Git commit changes
+## An easy way to know what has changed between two commits before deploying
 
-<img src="./docs/git-changes.jpeg" alt="Git Changes Illustration" width="500"/>
+<img src="./docs/git-changes-example.png" alt="Git Changes Illustration" width="500"/>
 
 <br />
 
 ## Overview
 
 Git Changes is a simple, focused command-line utility that helps developers understand changes between Git commits. Whether you're preparing for a deployment, reviewing code changes, or debugging production issues, Git Changes provides a clear, formatted overview of what changed and who made those changes.
+
+## Why?
+
+I've been working with Git for a long time, and I've noticed that
+
+- It's easy to forget what has changed between two commits.
+- Using "git diff" is not always the best way to understand what has changed.
+- Even if you use "git diff", you need to remember a lot of arguments to get the output you want.
+- I wanted to solve this problem for myself once and for all, and maybe others will find it useful.
 
 ## Features
 
@@ -42,7 +51,7 @@ chmod +x bin/git-changes.sh
 git config --global alias.changes '!bash /path/to/git-changes/bin/git-changes.sh'
 ```
 
-Replace /path/to/git-changes/bin/git-changes.sh with the absolute path to git-changes.sh on your system. This alias allows you to execute the script using git changes.
+Replace /path/to/git-changes/bin/git-changes.sh with the absolute path to git-changes.sh on your system. This alias allows you to execute the script using command alias `git changes`.
 
 ## Usage
 
@@ -51,7 +60,7 @@ After setting up the alias, you can use the following formats:
 - **Compare Using Commit Range:**
 
 ```bash
-git changes abc123...def456
+git changes abc123 def456
 ```
 
 Shows changes between two specific commits.
@@ -90,10 +99,12 @@ package.json
 
 ## TODOs
 
-- Add support for showing file diff statistics
+- Add support for selecting commits from the commit history using arrow keys and fuzzy search
 - Implement filtering by file type
 - Add colorized diff output option
 - Create better documentation with real-world use cases
+- Allow relative references to HEAD
+- Add support for temporal references (e.g. "this week", "yesterday", "1 week", "2 days", etc.)
 
 ## Contributing
 
