@@ -64,7 +64,7 @@ function pick_commit() {
 
   # Use git log to generate the list and fzf to select
   local selected_commit
-  selected_commit=$(git log --reverse --color=always --format="%C(red)%h%C(reset) - %C(green)(%ar)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" | \
+  selected_commit=$(git log --max-count=500 --color=always --format="%C(red)%h%C(reset) - %C(green)(%ar)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" | \
     fzf --ansi \
         --no-mouse \
         --preview 'git show --color=always {1}' \
