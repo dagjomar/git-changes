@@ -115,13 +115,6 @@ src/components/LoginForm.jsx
 package.json
 ```
 
-## TODOs
-
-- Implement filtering by file type
-- Add colorized diff output option
-- Create better documentation with real-world use cases
-- Add support for temporal references (e.g. "this week", "yesterday", "1 week", "2 days", etc.)
-
 ## Contributing
 
 Contributions are welcome! Feel free to submit issues or pull requests to enhance Git Changes.
