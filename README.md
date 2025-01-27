@@ -1,6 +1,6 @@
 # Git Changes
 
-## An easy way to know what has changed between two commits before deploying
+## An intuitive way to explore changes between Git commits
 
 <img src="./docs/git-changes-example.png" alt="Git Changes Illustration" width="500"/>
 
@@ -8,26 +8,40 @@
 
 ## Overview
 
-Git Changes is a simple, focused command-line utility that helps developers understand changes between Git commits. Whether you're preparing for a deployment, reviewing code changes, or debugging production issues, Git Changes provides a clear, formatted overview of what changed and who made those changes.
+Git Changes is a powerful yet simple command-line utility that helps developers understand what changed between Git commits. Whether you're preparing for a deployment, reviewing code changes, or debugging production issues, Git Changes provides a clear, formatted overview of commits and file changes with an intuitive interface.
 
 ## Why?
 
-I've been working with Git for a long time, and I've noticed that
+As developers, we frequently need to understand what changed between different points in our Git history. Common scenarios include:
 
-- It's easy to forget what has changed between two commits.
-- Using "git diff" is not always the best way to understand what has changed.
-- Even if you use "git diff", you need to remember a lot of arguments to get the output you want.
-- I wanted to solve this problem for myself once and for all, and maybe others will find it useful.
+- Preparing release notes for a deployment
+- Investigating when and why a change was introduced
+- Reviewing changes in specific parts of the codebase
+- Understanding what will be deployed to production
+
+While Git provides powerful tools like `git diff` and `git log`, they often require:
+
+- Remembering complex command arguments
+- Manual combination of multiple commands
+- Mental mapping between commit hashes and dates
+- Extra effort to filter and format output
+
+Git Changes solves these problems by providing:
+
+- Simple, memorable commands
+- Clear, formatted output
+- Interactive commit selection
+- Smart date-based filtering
+- Directory-specific views
 
 ## Features
 
-- **Commit History Overview:** See all commits between two points with author and timestamp.
-
-- **Changed Files List:** Quickly identify which files were modified.
-
-- **Directory Filtering:** Focus on changes in specific parts of your codebase.
-
-- **Flexible Reference Support:** Use commit hashes, branch names, or relative references.
+- **Interactive Commit Picker:** Select commits visually with fuzzy search and preview
+- **Smart Date References:** View changes from the last N days with simple commands
+- **Directory Filtering:** Focus on changes in specific parts of your codebase
+- **Commit History Overview:** See all commits with author and timestamp
+- **Changed Files List:** Quickly identify which files were modified
+- **Flexible References:** Use commit hashes, branch names, or relative references
 
 ## Installation
 
@@ -38,14 +52,8 @@ git clone https://github.com/yourusername/git-changes.git
 cd git-changes
 ```
 
-2. **Make the Script Executable:**
-
-```bash
-chmod +x bin/git-changes.sh
-```
-
-3. **Set Up Git Alias:**
-   The simplest way to do this is to run the `install_alias.sh` script:
+2. **Run the Installation Script:**
+   The simplest way to install is to run the provided installation script:
 
 ```bash
 ./bin/install_alias.sh
@@ -59,8 +67,6 @@ Alternatively, you can set up the alias manually:
 git config --global alias.changes '!bash /path/to/git-changes/bin/git-changes.sh'
 ```
 
-Replace /path/to/git-changes/bin/git-changes.sh with the absolute path to git-changes.sh on your system. This alias allows you to execute the script using command alias `git changes`.
-
 ## Usage
 
 After setting up the alias, you can use the following formats:
@@ -71,41 +77,37 @@ After setting up the alias, you can use the following formats:
 git changes abc123 def456
 ```
 
-Shows changes between two specific commits.
-
-- **Compare Single Commit to HEAD:**
+- **Interactive Commit Selection:**
 
 ```bash
-git changes abc123
+git changes pick                 # Select from all commits
+git changes pick frontend       # Select from commits touching frontend
 ```
 
-Shows changes from the specified commit to the current HEAD.
-
-- **List changes relative to HEAD:**
+- **Time-Based Selection:**
 
 ```bash
-git changes HEAD~5
+git changes 5d                  # Show changes in last 5 days
+git changes 2days              # Show changes in last 2 days
 ```
 
-Shows the 5 last commits relative to the current HEAD.
-
-- **Compare With Directory Filter:**
+- **Directory Filtering:**
 
 ```bash
-git changes abc123 def456 ./src
+git changes abc123 def456 ./src  # Show changes only in src directory
 ```
-
-Shows changes only within the specified directory.
 
 ## Example Output
 
 ```bash
 Changes between hash abc123 -----> def456
 
+
 List of commits:
 abc123 - (2 days ago) Add user authentication - Jane Doe
 bcd234 - (2 days ago) Fix login validation - John Smith
 cde345 - (3 days ago) Update dependencies - Jane Doe
+
 
 List of files changed:
 src/auth/login.js
