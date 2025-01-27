@@ -40,10 +40,13 @@ echo "Changes between hash $commit1 -----> $commit2"
 
 # Show commit messages
 echo
+echo
 echo "List of commits:"
 git --no-pager log --oneline "$commit1...$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%ar)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
 
 # Show changed files
+echo
+echo
 echo
 echo "List of files changed:"
 if [ -n "$directory" ]; then
@@ -51,3 +54,4 @@ if [ -n "$directory" ]; then
 else
     git --no-pager diff --name-only "$commit1...$commit2"
 fi
+echo
