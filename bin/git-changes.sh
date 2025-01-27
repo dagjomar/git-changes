@@ -20,6 +20,7 @@
 #   git changes abcdef fedcba
 #   git changes abcdef
 #   git changes abcdef fedcba ./frontend
+#   git changes HEAD~5
 # -------------------------------------------------------------------------
 
 # Validate input arguments

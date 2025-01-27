@@ -81,6 +81,14 @@ git changes abc123
 
 Shows changes from the specified commit to the current HEAD.
 
+- **List changes relative to HEAD:**
+
+```bash
+git changes HEAD~5
+```
+
+Shows the 5 last commits relative to the current HEAD.
+
 - **Compare With Directory Filter:**
 
 ```bash
@@ -111,7 +119,6 @@ package.json
 - Implement filtering by file type
 - Add colorized diff output option
 - Create better documentation with real-world use cases
-- Allow relative references to HEAD
 - Add support for temporal references (e.g. "this week", "yesterday", "1 week", "2 days", etc.)
 
 ## Contributing
