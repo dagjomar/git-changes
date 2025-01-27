@@ -31,6 +31,7 @@ function usage() {
   echo "  git changes <from> [to] [directory]"
   echo "  git changes <from...to>"
   echo "  git changes pick              # Interactive commit selection"
+  echo "  git changes <N>d[ays]        # Changes in last N days"
   echo
   echo "Examples:"
   echo "  git changes abc123 def456        # Changes between two commits"
@@ -39,6 +40,8 @@ function usage() {
   echo "  git changes abc123...def456      # Using shorthand range syntax"
   echo "  git changes abc123 def456 ./src  # Filter by directory"
   echo "  git changes pick                 # Select commit interactively"
+  echo "  git changes 5d                   # Changes in last 5 days"
+  echo "  git changes 2days                # Changes in last 2 days"
   echo
   echo "Arguments:"
   echo "  from        Starting commit hash, branch name, or HEAD relative reference"
@@ -64,7 +67,7 @@ function pick_commit() {
 
   # Use git log to generate the list and fzf to select
   local selected_commit
-  selected_commit=$(git log --max-count=500 --color=always --format="%C(red)%h%C(reset) - %C(green)(%ar)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" | \
+  selected_commit=$(git log --max-count=500 --color=always --format="%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" | \
     fzf --ansi \
         --no-mouse \
         --preview 'git show --color=always {1}' \
@@ -94,7 +97,7 @@ function show_changes() {
   echo
   echo
   echo "List of commits:"
-  git --no-pager log --oneline "$commit1...$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%ar)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+  git --no-pager log --oneline "$commit1...$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
 
   # Show changed files
   echo
@@ -109,6 +112,26 @@ function show_changes() {
   echo
 }
 
+function handle_days() {
+  local input=$1
+  local days
+
+  # Extract number of days from input (e.g., "5d", "5days", "2day")
+  if [[ $input =~ ^([0-9]+)d(ays?)?$ ]]; then
+    days="${BASH_REMATCH[1]}"
+    # Use git rev-list to find the oldest commit within the last N days
+    local from_commit
+    from_commit=$(git rev-list HEAD --since="$days days ago" --reverse | head -n 1)
+    if [ -z "$from_commit" ]; then
+      echo "Error: No commits found in the last $days days"
+      exit 1
+    fi
+    show_changes "$from_commit"
+  else
+    return 1  # Not a days format
+  fi
+}
+
 # Main script logic
 if [ "$#" -eq 0 ]; then
     usage
@@ -120,6 +143,11 @@ case "$1" in
     pick_commit
     ;;
   *)
+    # Try to handle as days format first
+    if handle_days "$1"; then
+      exit 0
+    fi
+    
     # Handle the original functionality
     if [[ "$1" == *"..."* ]]; then
         IFS="..." read -r commit1 commit2 <<< "$1"
