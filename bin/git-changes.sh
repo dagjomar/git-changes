@@ -23,10 +23,30 @@
 #   git changes HEAD~5
 # -------------------------------------------------------------------------
 
+function usage() {
+  echo "Git Changes - Inspect changes between commits"
+  echo
+  echo "Usage:"
+  echo "  git changes <from> [to] [directory]"
+  echo "  git changes <from...to>"
+  echo
+  echo "Examples:"
+  echo "  git changes abc123 def456        # Changes between two commits"
+  echo "  git changes abc123               # Changes from commit to HEAD"
+  echo "  git changes HEAD~5               # Last 5 commits"
+  echo "  git changes abc123...def456      # Using shorthand range syntax"
+  echo "  git changes abc123 def456 ./src  # Filter by directory"
+  echo
+  echo "Arguments:"
+  echo "  from        Starting commit hash, branch name, or HEAD relative reference"
+  echo "  to          (Optional) Ending commit hash, defaults to HEAD"
+  echo "  directory   (Optional) Directory to limit the search to"
+  exit 1
+}
+
 # Validate input arguments
 if [ "$#" -eq 0 ]; then
-    echo "Usage: $0 <from> [to] [directory]"
-    exit 1
+    usage
 fi
 
 # Assign arguments and handle the "from...to" shorthand
