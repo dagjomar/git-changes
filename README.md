@@ -1,6 +1,6 @@
 # Git Changes
 
-## An intuitive way to explore changes between Git commits
+## An intuitive way to list changes between Git commits
 
 <img src="./docs/git-changes-example.png" alt="Git Changes Illustration" width="500"/>
 
