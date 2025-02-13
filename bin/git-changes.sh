@@ -114,7 +114,30 @@ function show_changes() {
   echo
   echo
   echo "List of commits:"
-  git --no-pager log --oneline "$commit1...$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+  if [ -n "$directory" ]; then
+      # Remove leading ./ from directory if present
+      directory="${directory#./}"
+      
+      # For root commit, use a special case
+      if git rev-parse --verify --quiet "${commit1}^" >/dev/null; then
+          git --no-pager log --oneline "${commit1}^..$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d' -- "$directory"
+      else
+          # Show root commit if it touches the directory
+          if git log --oneline -n 1 --name-only "$commit1" -- "$directory" | grep -q "/"; then
+              git --no-pager log --oneline -n 1 "$commit1" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+              echo
+          fi
+          git --no-pager log --oneline "$commit1..$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d' -- "$directory"
+      fi
+  else
+      if git rev-parse --verify --quiet "${commit1}^" >/dev/null; then
+          git --no-pager log --oneline "${commit1}^..$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+      else
+          git --no-pager log --oneline "$commit1" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+          echo
+          git --no-pager log --oneline "$commit1..$commit2" --pretty=format:'%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d'
+      fi
+  fi
 
   # Show changed files
   echo
@@ -122,9 +145,26 @@ function show_changes() {
   echo
   echo "List of files changed:"
   if [ -n "$directory" ]; then
-      git --no-pager diff --name-only "$commit1...$commit2" "$directory"
+      {
+          if git rev-parse --verify --quiet "${commit1}^" >/dev/null; then
+              git --no-pager diff --name-only "${commit1}^..$commit2" "$directory"
+          else
+              # For root commit, show its files if they match the directory
+              if git log --oneline -n 1 --name-only "$commit1" -- "$directory" | grep -q "/"; then
+                  git --no-pager diff --name-only "$commit1" -- "$directory"
+              fi
+              git --no-pager diff --name-only "$commit1..$commit2" "$directory"
+          fi
+      } | sort -u  # Sort and remove duplicates
   else
-      git --no-pager diff --name-only "$commit1...$commit2"
+      {
+          if git rev-parse --verify --quiet "${commit1}^" >/dev/null; then
+              git --no-pager diff --name-only "${commit1}^..$commit2"
+          else
+              git diff-tree --no-commit-id --name-only -r "$commit1"
+              git --no-pager diff --name-only "$commit1..$commit2"
+          fi
+      } | sort -u  # Sort and remove duplicates
   fi
   echo
 }
