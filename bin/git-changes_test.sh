@@ -188,6 +188,47 @@ run_tests() {
     fi
     echo "✅ Test 4 passed"
     
+    # Test 5: Check that FROM commit is excluded but TO commit is included
+    echo "Test 5: FROM commit exclusion"
+    
+    # Create a sequence of commits to test with
+    echo "console.log('frontend 4');" >> frontend/src/app.js
+    git add frontend/src/app.js
+    git commit -m "First commit to test FROM exclusion"
+    
+    first_test_commit=$(git rev-parse HEAD)
+    
+    echo "console.log('frontend 5');" >> frontend/src/app.js
+    git add frontend/src/app.js
+    git commit -m "Second commit to test FROM exclusion"
+    
+    second_test_commit=$(git rev-parse HEAD)
+    
+    echo "console.log('frontend 6');" >> frontend/src/app.js
+    git add frontend/src/app.js
+    git commit -m "Third commit to test FROM exclusion"
+    
+    third_test_commit=$(git rev-parse HEAD)
+    
+    # Test the range from first to third commit
+    result=$("$GIT_CHANGES" "$first_test_commit" "$third_test_commit" frontend)
+    
+    # Should only show "Second commit" and "Third commit", not "First commit"
+    commit_count=$(count_commits "$result" "test FROM exclusion")
+    first_commit_present=$(echo "$result" | grep -c "First commit" || true)
+    
+    if [ "$commit_count" -ne 2 ] || [ "$first_commit_present" -ne 0 ]; then
+        echo "❌ Test 5 failed:"
+        echo "  Expected: 2 commits (excluding FROM commit), First commit should not be present"
+        echo "  Got: $commit_count commits, First commit present: $first_commit_present"
+        echo
+        echo "=== Debug: FROM exclusion test output ==="
+        echo "$result"
+        echo "=== End debug output ==="
+        return 1
+    fi
+    echo "✅ Test 5 passed"
+    
     echo "All tests passed! 🎉"
     return 0
 }
