@@ -73,6 +73,7 @@ function pick_commit() {
     selected_commit=$(git log --max-count=500 --color=always --format="%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" -- "$directory" | \
       fzf --ansi \
           --no-mouse \
+          --no-sort \
           --preview 'git show --color=always {1}' \
           --preview-window=right:60% \
           --bind 'ctrl-p:toggle-preview' \
@@ -82,6 +83,7 @@ function pick_commit() {
     selected_commit=$(git log --max-count=500 --color=always --format="%C(red)%h%C(reset) - %C(green)(%cr)%C(reset) %C(auto)%s - %C(bold blue)%an %C(auto)%d" | \
       fzf --ansi \
           --no-mouse \
+          --no-sort \
           --preview 'git show --color=always {1}' \
           --preview-window=right:60% \
           --bind 'ctrl-p:toggle-preview' \
